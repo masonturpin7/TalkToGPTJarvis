@@ -1,16 +1,23 @@
 import speech_recognition as sr
 import openai
 import os
+from dotenv import load_dotenv
 
+load_dotenv()
+if os.getenv("OPENAI_API_KEY") is None:
+            raise ValueError("OPENAI_API_KEY is not set")
 # obtain audio from the microphone
 r = sr.Recognizer()
 while True:
+    
     with sr.Microphone() as source:
         print("Say something!")
         audio = r.listen(source)
-
+   
     # recognize speech using whisper
+    
     try:
+        
         text = r.recognize_whisper(audio, language="english")
         if "Jarvis" in text:
                     print("Question: " + text)
@@ -33,4 +40,8 @@ while True:
         print("Whisper could not understand audio")
     except sr.RequestError as e:
         print("Could not request results from Whisper")
+    except KeyboardInterrupt:
+            break
+
+
 
